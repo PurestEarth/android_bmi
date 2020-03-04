@@ -2,12 +2,17 @@ package com.example.bmicalculator.ui.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
-class SettingsViewModel : ViewModel() {
+class SettingsViewModel(private val state: SavedStateHandle) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is settings Fragment"
+    fun toggleImperial(){
+        state.set("imperialUnits", !getImperial())
     }
-    val text: LiveData<String> = _text
+
+    fun getImperial(): Boolean{
+        return state.get<Boolean>("imperialUnits") ?: false
+    }
+
 }
