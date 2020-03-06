@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.bmicalculator.R
+import kotlinx.android.synthetic.main.activity_main.*
 
 class SettingsFragment : Fragment() {
 
@@ -24,7 +25,7 @@ class SettingsFragment : Fragment() {
     ): View? {
 
         var settingsViewModel =
-                ViewModelProviders.of(this).get(SettingsViewModel::class.java)
+                ViewModelProviders.of(this.requireActivity()).get(SettingsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_settings, container, false)
         imperialUnits = root.findViewById(R.id.switch1)
         Log.i("BENI"," " + settingsViewModel.getImperial())

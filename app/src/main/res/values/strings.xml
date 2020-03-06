@@ -12,7 +12,10 @@
     <string name="bmi_desc">Your BMI</string>
     <string name="height_input">Your height</string>
     <string name="weight_input">Your body weight</string>
-    <string name="weight_hint">Insert your weight</string>
-    <string name="height_hint">Insert your height</string>
-    <string name="bmi_hint">Here be BMI</string>
+    <string name="weight_hint_kg">Insert weight (kg)</string>
+    <string name="height_hint_cm">Insert height (cm)</string>
+    <string name="weight_hint_lb">Insert weight (lb)</string>
+    <string name="height_hint_ft">Insert height (ft)</string>
+    <string name="height_hint_inch">Insert height (inch)</string>
+    <string name="bmi_hint">Get BMI</string>
 </resources>

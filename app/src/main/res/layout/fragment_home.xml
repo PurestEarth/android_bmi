@@ -6,36 +6,53 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="360dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
+    <EditText
+        android:id="@+id/editText4"
+        android:layout_width="171dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
+        android:autofillHints="@string/height_hint_inch"
+        android:ems="10"
+        android:visibility="invisible"
+        android:hint="@string/height_hint_inch"
+        android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editText"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="171dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="40dp"
+        android:autofillHints="@string/height_hint_ft"
+        android:ems="10"
+        android:visibility="invisible"
+        android:hint="@string/height_hint_ft"
+        android:inputType="numberDecimal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="250dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginRight="80dp"
+        android:layout_width="302dp"
+        android:layout_height="307dp"
+        android:layout_marginTop="40dp"
         android:autofillHints="@string/bmi_hint"
+        android:text="@string/bmi_hint"
         android:ems="10"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:hint="@string/bmi_hint"
+        android:textSize="50sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
     <EditText
         android:id="@+id/editText3"
@@ -43,32 +60,43 @@
         android:layout_height="45dp"
         android:layout_marginStart="80dp"
         android:layout_marginLeft="80dp"
-        android:layout_marginTop="145dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="80dp"
         android:layout_marginRight="80dp"
-        android:autofillHints="@string/height_hint"
+        android:autofillHints="@string/height_hint_cm"
         android:ems="10"
-        android:hint="@string/height_hint"
+        android:hint="@string/height_hint_cm"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editText2"
         android:layout_width="250dp"
         android:layout_height="45dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginRight="80dp"
+        android:autofillHints="@string/weight_hint_kg"
         android:ems="10"
-        android:autofillHints="@string/weight_hint"
+        android:hint="@string/weight_hint_kg"
         android:inputType="numberDecimal"
-        android:hint="@string/weight_hint"
+        app:layout_constraintEnd_toEndOf="@+id/editText3"
+        app:layout_constraintStart_toStartOf="@+id/editText3"
+        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="157dp"
+        android:layout_marginLeft="157dp"
+        android:layout_marginTop="51dp"
+        android:layout_marginEnd="166dp"
+        android:layout_marginRight="166dp"
+        android:text="@string/bmi_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintTop_toBottomOf="@+id/editText2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
