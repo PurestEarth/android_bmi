@@ -1,9 +1,9 @@
 package com.example.bmicalculator.ui.home
 
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -14,27 +14,38 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.PopupWindow
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.annotation.ColorInt
+import androidx.core.animation.doOnEnd
 import androidx.core.view.isInvisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.bmicalculator.R
 import com.example.bmicalculator.ui.settings.SettingsViewModel
-import kotlinx.android.synthetic.main.activity_main.*
 import org.w3c.dom.Text
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import kotlin.math.pow
-import kotlin.math.roundToInt
+import kotlin.math.round
+
 
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
     var height: Double = 0.0
+    var feet: Double = 0.0
+    var inches: Double = 0.0
     var weight: Double = 0.0
     var imperials: Boolean = false
-    private lateinit var bmi: String
+    private var bmi: Double = 0.0
+    var bmiEn = BMI.UNDERWEIGHT
+    val bmiDiv: Map<Double, BMI> = mapOf(
+        18.5 to BMI.UNDERWEIGHT,
+        24.9 to BMI.NORMAL,
+        29.9 to BMI.OVERWEIGHT,
+        34.9 to BMI.OBESE)
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -54,7 +65,7 @@ class HomeFragment : Fragment() {
         if(imperials != settingsViewModel.getImperial()){
             imperials = settingsViewModel.getImperial()
             if (imperials){
-                weightInput.setText(R.string.weight_hint_lb)
+                weightInput.setHint(R.string.weight_hint_lb)
                 heightInput.isInvisible = true
                 heightInputFt.isInvisible = false
                 heightInputInch.isInvisible = false
@@ -67,13 +78,25 @@ class HomeFragment : Fragment() {
                 heightInputInch.isInvisible = true
             }
         }
-        //TODO secure from too big values
-
         weightInput.addTextChangedListener {
-            weight = it.toString().toDouble()
+            if(it.toString().isNotEmpty()){
+                weight = it.toString().toDouble()
+            }
         }
         heightInput.addTextChangedListener {
-            height = it.toString().toDouble()
+            if(it.toString().isNotEmpty()) {
+                height = it.toString().toDouble()
+            }
+        }
+        heightInputFt.addTextChangedListener{
+            if(it.toString().isNotEmpty()) {
+                feet = it.toString().toDouble()
+            }
+        }
+        heightInputInch.addTextChangedListener{
+            if(it.toString().isNotEmpty()) {
+                inches = it.toString().toDouble()
+            }
         }
         countBmiButton.setOnClickListener {
             hideKeyboard()
@@ -96,45 +119,84 @@ class HomeFragment : Fragment() {
 
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
         val popupBMI: TextView = popupView.findViewById(R.id.textView4)
-        popupBMI.text = bmi
+        val popupWorkout: TextView = popupView.findViewById(R.id.textView5)
+        val popupDesc: TextView = popupView.findViewById(R.id.textView6)
+        setProperContent(popupWorkout, popupDesc)
+        popupBMI.text = bmi.toString()
         popupView.setOnTouchListener { _, _ ->
             popupWindow.dismiss()
             true
         }
     }
 
+    private fun setProperContent(popupWorkout: TextView, popupDesc: TextView) {
+        popupWorkout.text = resources.getText(bmiEn.workout)
+        popupDesc.text = resources.getText(bmiEn.desc)
+    }
+
     private fun setBMI(view: TextView){
-        //todo check setting || validate
-        if(weight > 0 && height > 0) {
-            view.text = getBMIMetric(weight,height).toString()
-            bmi = view.text.toString()
+        if(validate()) {
+            val df = DecimalFormat("#.##")
+            df.roundingMode = RoundingMode.CEILING
+            bmi = if (imperials) df.format(getBMIImperial(weight, feet, inches)).toDouble() else df.format(getBMIMetric(weight,height)).toDouble()
+            startCountAnimation(view, bmi)
         }
     }
 
-    fun getBMIMetric(weight: Double, height: Double): Double{
+    private fun validate(): Boolean{
+        return if(imperials){
+            weight > 0 && feet > 0 && inches > 0
+        } else{
+            weight > 0 && height > 0
+        }
+    }
+
+    private fun getBMIMetric(weight: Double, height: Double): Double{
         if( height > 0){
             return weight/ (height * 0.01).pow(2)
         }
         return 0.0
     }
 
-    fun getBMIImperial(weight: Double, height: Double): Double{
-        // todo check how the fuck count it using feet and inches
+    private fun getBMIImperial(weight: Double, height: Double, inches: Double): Double{
         if( height > 0) {
-            return weight / height.pow(2) * 703
+            return weight / (inches + 12*feet).pow(2) * 703
         }
         return 0.0
     }
-    fun Fragment.hideKeyboard() {
+    private fun Fragment.hideKeyboard() {
         view?.let { activity?.hideKeyboard(it) }
     }
 
-    fun Activity.hideKeyboard() {
-        hideKeyboard(currentFocus ?: View(this))
-    }
-
-    fun Context.hideKeyboard(view: View) {
+    private fun Context.hideKeyboard(view: View) {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun startCountAnimation(textView: TextView, max: Double) {
+        Log.i("BEN", "Animation")
+        val animator = ValueAnimator.ofInt(0, max.toInt())
+        animator.duration = 2000
+        animator.addUpdateListener { animation -> textView.text = animation.animatedValue.toString() }
+
+        animator.start()
+        animator.doOnEnd {
+            textView.text = max.toString()
+
+            getColorForBMI(bmi)?.let { it1 -> textView.setTextColor(it1) }
+
+        }
+    }
+
+    private fun getColorForBMI(bmi: Double): Int? {
+        for (key in bmiDiv.keys){
+            Log.i("BEN", key.toString())
+            if (bmi <= key){
+                bmiEn = bmiDiv[key] ?: error(" Something's gone awfully wrong ")
+                return bmiDiv[key]?.let { resources.getColor(it.colour) }
+            }
+        }
+        Log.i("BEN", "EXTREMELY Obese")
+        return resources.getColor(BMI.EXTREMELY_OBESE.colour)
     }
 }

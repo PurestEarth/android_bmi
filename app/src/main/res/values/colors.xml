@@ -3,4 +3,12 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <!-->   BMI colors  <!-->
+
+    <color name="bmi_underweight">#93B4D7</color>
+    <color name="bmi_normal">#8FC69F</color>
+    <color name="bmi_overweight">#F9D549</color>
+    <color name="bmi_obese">#E4985E</color>
+    <color name="bmi_extremely_obese">#D65C5B</color>
 </resources>

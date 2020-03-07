@@ -18,4 +18,20 @@
     <string name="height_hint_ft">Insert height (ft)</string>
     <string name="height_hint_inch">Insert height (inch)</string>
     <string name="bmi_hint">Get BMI</string>
+
+    <string name="bmi_underweight_desc">
+        Being underweight can also cause other conditions, in which case it is primary. Severely underweight individuals may have poor physical stamina and a weak immune system, leaving them open to infection. According to Robert E. Black of the Johns Hopkins School of Public Health (JHSPH), "Underweight status … and micronutrient deficiencies also cause decreases in immune and non-immune host defenses, and should be classified as underlying causes of death if followed by infectious diseases that are the terminal associated causes.</string>
+    <string name="bmi_underweight_workout">Try eating more</string>
+    <string name="bmi_normal">
+        Your weight is perfectly normal, it doesnt mean youre perfectly healthy but you are not predestined for any weight connected sickness
+    </string>
+    <string name="bmi_normal_workout">Keep doing whatever you are doing</string>
+    <string name="bmi_overweight_workout">Some forklifts</string>
+    <string name="bmi_overweight_desc">
+    While the negative health outcomes associated with obesity are accepted within the medical community, the health implications of the overweight category are more controversial. The generally accepted view is that being overweight causes similar health problems to obesity, but to a lesser degree. A 2016 review estimated that the risk of death increases by seven percent among overweight people with a BMI of 25 to 27.5 and 20 percent among overweight people with a BMI of 27.5 to 30.
+    </string>
+    <string name="bmi_obese_workout">Plenty of forklifts</string>
+    <string name="bmi_obese_desc">Obesity is mostly preventable through a combination of social changes and personal choices. Changes to diet and exercising are the main treatments Diet quality can be improved by reducing the consumption of energy-dense foods, such as those high in fat or sugars, and by increasing the intake of dietary fiber. Medications can be used, along with a suitable diet, to reduce appetite or decrease fat absorption. </string>
+    <string name="bmi_extremely_obese_workout">Days of forklifts</string>
+    <string name="bmi_extremely_obese_desc">Many Americans are obese. According to the Centers for Disease Control and Prevention (CDC), over one-third of the United States adult population is obese. </string>
 </resources>
