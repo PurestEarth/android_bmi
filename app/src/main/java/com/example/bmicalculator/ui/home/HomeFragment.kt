@@ -18,6 +18,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.example.bmicalculator.BMICounterValidator
 import com.example.bmicalculator.R
 import com.example.bmicalculator.ui.settings.SettingsViewModel
 import org.w3c.dom.Text
@@ -121,8 +122,10 @@ class HomeFragment : Fragment() {
                 } catch (e: NumberFormatException){
                     Toast.makeText(weightInput.context, this.context?.resources?.getString(R.string.parsing_broken).toString(), Toast.LENGTH_SHORT).show()
                 }
+            }else {
+                inches = 0.0
             }
-            inches = 0.0
+
         }
         countBmiButton.setOnClickListener {
             hideKeyboard()
