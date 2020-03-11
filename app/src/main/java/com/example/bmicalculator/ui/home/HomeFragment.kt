@@ -10,10 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.PopupWindow
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.ColorInt
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isInvisible
@@ -33,6 +30,8 @@ import kotlin.math.round
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var bmiCounterValidator: BMICounterValidator
+    private lateinit var errorMessage : String
     var height: Double = 0.0
     var feet: Double = 0.0
     var inches: Double = 0.0
@@ -54,7 +53,7 @@ class HomeFragment : Fragment() {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-
+        bmiCounterValidator =  BMICounterValidator()
         val weightInput: EditText = root.findViewById(R.id.editText2)
         val heightInput: EditText = root.findViewById(R.id.editText3)
         val heightInputFt: EditText = root.findViewById(R.id.editText)
@@ -80,23 +79,50 @@ class HomeFragment : Fragment() {
         }
         weightInput.addTextChangedListener {
             if(it.toString().isNotEmpty()){
-                weight = it.toString().toDouble()
+                try{
+                    weight = it.toString().toDouble()
+                } catch (e: NumberFormatException){
+                    Toast.makeText(weightInput.context, this.context?.resources?.getString(R.string.parsing_broken).toString(), Toast.LENGTH_SHORT).show()
+                }
+
+            }
+            else{
+                weight = 0.0
             }
         }
         heightInput.addTextChangedListener {
             if(it.toString().isNotEmpty()) {
-                height = it.toString().toDouble()
+                try {
+                    height = it.toString().toDouble()
+                } catch (e: NumberFormatException){
+                    Toast.makeText(weightInput.context, this.context?.resources?.getString(R.string.parsing_broken).toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
+            else{
+                height = 0.0
             }
         }
         heightInputFt.addTextChangedListener{
             if(it.toString().isNotEmpty()) {
-                feet = it.toString().toDouble()
+                try {
+                    feet = it.toString().toDouble()
+                } catch (e: NumberFormatException){
+                    Toast.makeText(weightInput.context, this.context?.resources?.getString(R.string.parsing_broken).toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
+            else{
+                feet = 0.0
             }
         }
         heightInputInch.addTextChangedListener{
             if(it.toString().isNotEmpty()) {
-                inches = it.toString().toDouble()
+                try {
+                    inches = it.toString().toDouble()
+                } catch (e: NumberFormatException){
+                    Toast.makeText(weightInput.context, this.context?.resources?.getString(R.string.parsing_broken).toString(), Toast.LENGTH_SHORT).show()
+                }
             }
+            inches = 0.0
         }
         countBmiButton.setOnClickListener {
             hideKeyboard()
@@ -138,32 +164,38 @@ class HomeFragment : Fragment() {
         if(validate()) {
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING
-            bmi = if (imperials) df.format(getBMIImperial(weight, feet, inches)).toDouble() else df.format(getBMIMetric(weight,height)).toDouble()
+            bmi = if (imperials) df.format(bmiCounterValidator.getBMIImperial(weight, feet, inches)).toDouble() else df.format(bmiCounterValidator.getBMIMetric(weight,height)).toDouble()
             startCountAnimation(view, bmi)
+        }
+        else{
+            Toast.makeText(view.context, errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun validate(): Boolean{
         return if(imperials){
-            weight > 0 && feet > 0 && inches > 0
+            return if(feet <= 0.0){
+                errorMessage = this.context?.resources?.getString(R.string.error_no_height_feet).toString()
+                return false
+            } else if (weight <= 0.0){
+                errorMessage = this.context?.resources?.getString(R.string.error_no_weight).toString()
+                return false
+            }
+            else if (inches <= 0.0){
+                errorMessage = this.context?.resources?.getString(R.string.error_no_height_inches).toString()
+                return false
+            }else true
         } else{
-            weight > 0 && height > 0
+            return if(height <= 0.0){
+                errorMessage = this.context?.resources?.getString(R.string.error_no_height).toString()
+                return false
+            } else if (weight <= 0.0){
+                errorMessage = this.context?.resources?.getString(R.string.error_no_weight).toString()
+                return false
+            } else true
         }
     }
 
-    private fun getBMIMetric(weight: Double, height: Double): Double{
-        if( height > 0){
-            return weight/ (height * 0.01).pow(2)
-        }
-        return 0.0
-    }
-
-    private fun getBMIImperial(weight: Double, height: Double, inches: Double): Double{
-        if( height > 0) {
-            return weight / (inches + 12*feet).pow(2) * 703
-        }
-        return 0.0
-    }
     private fun Fragment.hideKeyboard() {
         view?.let { activity?.hideKeyboard(it) }
     }
@@ -174,7 +206,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun startCountAnimation(textView: TextView, max: Double) {
-        Log.i("BEN", "Animation")
         val animator = ValueAnimator.ofInt(0, max.toInt())
         animator.duration = 2000
         animator.addUpdateListener { animation -> textView.text = animation.animatedValue.toString() }
@@ -188,15 +219,13 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun getColorForBMI(bmi: Double): Int? {
+    fun getColorForBMI(bmi: Double): Int? {
         for (key in bmiDiv.keys){
-            Log.i("BEN", key.toString())
             if (bmi <= key){
                 bmiEn = bmiDiv[key] ?: error(" Something's gone awfully wrong ")
                 return bmiDiv[key]?.let { resources.getColor(it.colour) }
             }
         }
-        Log.i("BEN", "EXTREMELY Obese")
         return resources.getColor(BMI.EXTREMELY_OBESE.colour)
     }
 }

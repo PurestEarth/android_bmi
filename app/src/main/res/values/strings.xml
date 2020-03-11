@@ -34,4 +34,9 @@
     <string name="bmi_obese_desc">Obesity is mostly preventable through a combination of social changes and personal choices. Changes to diet and exercising are the main treatments Diet quality can be improved by reducing the consumption of energy-dense foods, such as those high in fat or sugars, and by increasing the intake of dietary fiber. Medications can be used, along with a suitable diet, to reduce appetite or decrease fat absorption. </string>
     <string name="bmi_extremely_obese_workout">Days of forklifts</string>
     <string name="bmi_extremely_obese_desc">Many Americans are obese. According to the Centers for Disease Control and Prevention (CDC), over one-third of the United States adult population is obese. </string>
+    <string name="error_no_height">Please insert correct height</string>
+    <string name="error_no_weight">Please insert correct weight</string>
+    <string name="error_no_height_feet">Please insert correct height (feet)</string>
+    <string name="error_no_height_inches">Please insert correct height (inches)</string>
+    <string name="parsing_broken">You managed to broke input, congratulations</string>
 </resources>
